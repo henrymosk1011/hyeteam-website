@@ -107,16 +107,16 @@ Photos are high resolution images from [Unsplash](https://unsplash.com/license),
 | Laptop on dark desk | [Luca Bravo](https://unsplash.com/photos/9l_326FISzk) |
 | Assistant with headphones | [Rodrigo Rodrigues](https://unsplash.com/photos/PEm8fqi4vBA) |
 | Social media phone | [Berke Citak](https://unsplash.com/photos/0cpyFsSUiSc) |
-| Stethoscope | [Alexandr Podvalny](https://unsplash.com/photos/tE7_jvK-_YU) |
+| Medical professional | [Jonathan Borba](https://unsplash.com/photos/uBb_ZDIrquc) |
 | Scales of justice | [Nellie Adamyan](https://unsplash.com/photos/I2Ge7bLAhV4) |
 | Law library | [Nasser Eledroos](https://unsplash.com/photos/dykSg3AgqV4) |
-| Video call | [Chris Montgomery](https://unsplash.com/photos/smgTvepind4) |
+| Video call | [Vitaly Gariev](https://unsplash.com/photos/GD4jccM_K_E) |
 | Organized workstation | [Arnel Hasanovic](https://unsplash.com/photos/MNd-Rka1o0Q) |
-| Working from home | [Paige Cody](https://unsplash.com/photos/zGmVI1VljO4) |
-| Home office | [Jan Baborák](https://unsplash.com/photos/O4nTgxWr5Sc) |
+| Working from home | [Luca Nicoletti](https://unsplash.com/photos/mNJVyLyiLtw) |
+| Working by the window | [Filip Rankovic Grobgaard](https://unsplash.com/photos/mhQAQATZApA) |
 | Sunlit desk | [Minh Pham](https://unsplash.com/photos/IisDPFNUS4k) |
-| Wooden table | [Fotografía Editorial](https://unsplash.com/photos/9vPXBhogV3s) |
-| Couch | [Jess Morgan](https://unsplash.com/photos/nTVdm_vEJQc) |
+| Smiling at the laptop | [Rodrigo Rodrigues](https://unsplash.com/photos/xEqFIzP0_3c) |
+| At the desk | [Vitaly Gariev](https://unsplash.com/photos/wAPhLocO-ms) |
 | Notepad | [Marissa Grootes](https://unsplash.com/photos/flRm0z3MEoA) |
 | Doctor's office | [charlesdeluvio](https://unsplash.com/photos/S5meg_j_W1U) |
 
