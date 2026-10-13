@@ -90,6 +90,8 @@ The site works on any static host.
 
 Photos are high resolution images from [Unsplash](https://unsplash.com/license), loaded from Unsplash's image CDN at the right size for each screen. Real photos of the HyeTeam assistants and office are a great upgrade whenever they are available: swap the `images.unsplash.com` links for your own files.
 
+Do not use Unsplash photo `1783094268362-c49d7f290c82` (woman in blue scrubs with a tattoo) anywhere on the site.
+
 | Use | Photo |
 | --- | --- |
 | Home hero | [Aleksei Zhivilov](https://unsplash.com/photos/5I263mnTkPc) |
@@ -99,7 +101,7 @@ Photos are high resolution images from [Unsplash](https://unsplash.com/license),
 | Yerevan at dusk | [Aleksei Agafonov](https://unsplash.com/photos/faCnugnJwpE) |
 | The Cascade | [Hrag Kosbekian](https://unsplash.com/photos/al_KyWWoyUI) |
 | Cascade sculptures | [Tigran Shishmanyan](https://unsplash.com/photos/R1qepPVFzx0) |
-| Modern office | [Cabri Caldwell](https://unsplash.com/photos/uayp1kteLr0) |
+| Taking notes | [Aleksei Zhivilov](https://unsplash.com/photos/4CMDPkkST7I) |
 | Desk with glasses | [Irfan Syahmi](https://unsplash.com/photos/QQeIkbnwAbA) |
 | Weekly planner | [Renáta-Adrienn](https://unsplash.com/photos/ebvCsRypmxM) |
 | Wall calendar | [Nathan Dumlao](https://unsplash.com/photos/tG4waP7YiAg) |
