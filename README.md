@@ -19,6 +19,7 @@ A fast, static website with no build step. Every page is plain HTML, one shared 
 | --- | --- |
 | Home | `/` |
 | About | `/about/` |
+| Hire a Virtual Assistant | `/hire/` |
 | Become a Virtual Assistant | `/apply/` |
 | Contact | `/contact/` |
 | Blog | `/blog/` |
@@ -26,20 +27,21 @@ A fast, static website with no build step. Every page is plain HTML, one shared 
 | Privacy Policy | `/privacy/` |
 | Not found | `/404.html` |
 
-The previous site's addresses (`/about-us`, `/become-a-virtual-assistant`, `/privacy-policy`) redirect to the new pages so existing links and search results keep working.
+The previous site's addresses (`/about-us`, `/hire-a-virtual-assistant`, `/become-a-virtual-assistant`, `/privacy-policy`) redirect to the new pages so existing links and search results keep working.
 
 ## Project structure
 
 ```
 index.html              Home
-about/ apply/ contact/  Inner pages (each has an index.html)
+about/ hire/ apply/     Inner pages (each has an index.html)
+contact/
 blog/                   Blog index and articles
 privacy/                Privacy Policy
 404.html                Not found page
 assets/css/main.css     All styles (colors and type at the top)
 assets/js/main.js       All interactions and animations
 assets/vendor/          GSAP 3.15.0, ScrollTrigger, Lenis 1.3.26
-assets/img/favicon.svg  Browser tab icon
+assets/img/            Logo files, favicons and the social share image
 sitemap.xml, robots.txt Search engine files
 ```
 
@@ -61,14 +63,15 @@ The site works on any static host.
 
 ## Common edits
 
-**Logo.** The header shows a type based wordmark (`Hye` in apricot, `Team` in white). To use the official logo file, add it as `assets/img/logo.svg` and replace the contents of the `<a class="logo">` link in each page's header with `<img src="assets/img/logo.svg" alt="HyeTeam">` (use `../` or `../../` before `assets` on inner pages, matching the other asset links on that page).
+**Logo.** The official HyeTeam logo was rebuilt as crisp vectors: the circular monogram from exact measurements and the wordmark from Poppins Bold, its original typeface. Standalone files live in `assets/img/` (`hyeteam-logo.svg`, `hyeteam-icon.svg`). On the pages, the logo is defined once per page in a hidden `<svg class="sprite">` at the top of the body and reused in the header, the intro animation and the footer, so it can change color with each section (logo blue on dark sections, near black on light and blue sections).
 
 **Colors and fonts.** Edit the tokens at the top of `assets/css/main.css`:
 
-* `--ink` `#0f0e0d` (near black)
-* `--paper` `#f4f0e8` (warm off white)
-* `--apricot` `#ff8a3d` (accent, a nod to Armenia's national fruit and the orange in its flag)
-* Fonts: Inter Tight and Instrument Serif from Google Fonts
+* `--brand` `#02adff` (HyeTeam blue: buttons, accents and the blue sections)
+* `--brand-soft` `#89cff0` (logo blue)
+* `--brand-deep` `#0088cf` and `--brand-ink` `#0070ad` (the same blue, deepened so accent text stays readable on light backgrounds)
+* `--ink` `#0a0e12` (near black) and `--paper` `#f2f6f9` (cool off white)
+* Fonts: Inter Tight and Instrument Serif from Google Fonts (the logo itself is a vector, so it needs no font)
 
 **Contact details.** Email, phone and address appear in the header menu, footer, contact page and privacy policy of every page. Search the project for `info@hyeteam.com` and `972.483.0260` to update them.
 
@@ -76,7 +79,7 @@ The site works on any static host.
 
 **Strategy Call link.** "Schedule a Strategy Call" buttons go to the contact form with "A free Strategy Call" preselected. To send people to a booking page such as Calendly, replace `contact/?topic=strategy#form` in those buttons with the booking link.
 
-**Social links.** The footer links to Facebook. Add Instagram, LinkedIn or others in the footer's "Follow" column.
+**Social links.** The footer links to Facebook. Add Instagram or others in the footer's "Social" column.
 
 **Copyright year.** The footer year updates itself from the visitor's clock, so it shows 2027 starting January 1, 2027 with no edits needed.
 

@@ -288,13 +288,13 @@
   /* ---------------------------------------------------------
      Curtain: intro on first visit, page transitions after
      --------------------------------------------------------- */
-  function setCurtainLabel(text, isIntro) {
+  function setCurtainLabel(text) {
     if (!curtainLabel) return [];
     curtainLabel.innerHTML = '';
     var chars = [];
-    Array.prototype.forEach.call(text, function (ch, i) {
+    Array.prototype.forEach.call(text, function (ch) {
       var s = document.createElement('span');
-      s.className = 'c' + (isIntro && i < 3 ? ' hl' : '');
+      s.className = 'c';
       s.textContent = ch;
       curtainLabel.appendChild(s);
       chars.push(s);
@@ -309,25 +309,33 @@
     var nextLabel = store('hye:label');
     store('hye:label', null);
 
-    var label = firstVisit ? 'HyeTeam' : (nextLabel || '');
-    var chars = setCurtainLabel(label, firstVisit);
+    var logo = curtain.querySelector('[data-curtain-logo]');
+    var intro = firstVisit && !!logo;
+    var chars = intro ? [] : setCurtainLabel(nextLabel || '');
 
     var tl = gsap.timeline({
       defaults: { ease: 'expo.out' },
-      onComplete: function () { curtain.style.visibility = 'hidden'; }
+      onComplete: function () {
+        curtain.style.visibility = 'hidden';
+        curtain.classList.remove('is-intro');
+      }
     });
     gsap.set(curtain, { yPercent: 0 });
 
-    if (chars.length) {
-      gsap.set(chars, { yPercent: firstVisit ? 110 : 0 });
-      if (firstVisit) {
-        tl.to(chars, { yPercent: 0, duration: 1, stagger: 0.045 }, 0.1)
-          .to(chars, { yPercent: -110, duration: 0.7, ease: 'expo.in', stagger: 0.025 }, '+=0.25');
-      } else {
-        tl.to(chars, { yPercent: -110, duration: 0.55, ease: 'expo.in', stagger: 0.02 }, 0.05);
-      }
+    if (intro) {
+      /* First visit: the HyeTeam mark spins in, the wordmark slides out of it */
+      curtain.classList.add('is-intro');
+      var mark = logo.querySelector('.cl-mark');
+      var word = logo.querySelector('.cl-word');
+      gsap.set(mark, { transformOrigin: '50% 50%', rotate: -140, scale: 0.35, autoAlpha: 0 });
+      gsap.set(word, { x: -90, autoAlpha: 0 });
+      tl.to(mark, { rotate: 0, scale: 1, autoAlpha: 1, duration: 1.15 }, 0.1)
+        .to(word, { x: 0, autoAlpha: 1, duration: 1 }, 0.4)
+        .to(logo, { yPercent: -35, autoAlpha: 0, duration: 0.6, ease: 'expo.in' }, '+=0.3');
+    } else if (chars.length) {
+      tl.to(chars, { yPercent: -110, duration: 0.55, ease: 'expo.in', stagger: 0.02 }, 0.05);
     }
-    tl.to(curtain, { yPercent: -100, duration: 1, ease: 'expo.inOut' }, chars.length ? '-=0.35' : 0.05);
+    tl.to(curtain, { yPercent: -100, duration: 1, ease: 'expo.inOut' }, intro || chars.length ? '-=0.35' : 0.05);
     tl.add(function () { if (heroTimeline) heroTimeline.play(); }, '-=0.6');
 
     /* Transition out on internal navigation */
@@ -354,7 +362,8 @@
       if (text.length > 18) text = '';
       store('hye:label', text);
 
-      var outChars = setCurtainLabel(text, false);
+      curtain.classList.remove('is-intro');
+      var outChars = setCurtainLabel(text);
       curtain.style.visibility = 'visible';
       gsap.killTweensOf(curtain);
       var out = gsap.timeline({ onComplete: function () { window.location.href = url.href; } });
