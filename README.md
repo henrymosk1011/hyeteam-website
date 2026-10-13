@@ -25,9 +25,10 @@ A fast, static website with no build step. Every page is plain HTML, one shared 
 | Blog | `/blog/` |
 | Blog articles | `/blog/legal/`, `/blog/healthcare/`, `/blog/efficiency/` |
 | Privacy Policy | `/privacy/` |
+| Terms and Conditions | `/terms/` |
 | Not found | `/404.html` |
 
-The previous site's addresses (`/about-us`, `/hire-a-virtual-assistant`, `/become-a-virtual-assistant`, `/privacy-policy`) redirect to the new pages so existing links and search results keep working.
+The previous site's addresses (`/about-us`, `/hire-a-virtual-assistant`, `/become-a-virtual-assistant`, `/privacy-policy`, `/terms-and-conditions`) redirect to the new pages so existing links and search results keep working.
 
 ## Project structure
 
@@ -36,7 +37,7 @@ index.html              Home
 about/ hire/ apply/     Inner pages (each has an index.html)
 contact/
 blog/                   Blog index and articles
-privacy/                Privacy Policy
+privacy/ terms/         Privacy Policy and Terms and Conditions
 404.html                Not found page
 assets/css/main.css     All styles (colors and type at the top)
 assets/js/main.js       All interactions and animations
@@ -79,7 +80,7 @@ The site works on any static host.
 
 **Strategy Call link.** "Schedule a Strategy Call" buttons go to the contact form with "A free Strategy Call" preselected. To send people to a booking page such as Calendly, replace `contact/?topic=strategy#form` in those buttons with the booking link.
 
-**Social links.** The footer links to Facebook. Add Instagram or others in the footer's "Social" column.
+**Social links.** The footer's "Social" column links to Instagram (`instagram.com/hyeteam`) and Facebook (`facebook.com/hyeteam`).
 
 **Copyright year.** The footer year updates itself from the visitor's clock, so it shows 2027 starting January 1, 2027 with no edits needed.
 
