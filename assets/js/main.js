@@ -671,6 +671,12 @@
      --------------------------------------------------------- */
   function initHoverList() {
     if (!finePointer) return;
+
+    // Last known cursor position, or null when the cursor is outside the window.
+    var pointer = null;
+    window.addEventListener('pointermove', function (e) { pointer = { x: e.clientX, y: e.clientY }; }, { passive: true });
+    document.addEventListener('mouseout', function (e) { if (!e.relatedTarget) pointer = null; });
+
     $all('[data-hover-list]').forEach(function (list) {
       var float = document.createElement('div');
       float.className = 'hover-img';
@@ -683,24 +689,53 @@
 
       var xTo = gsap.quickTo(float, 'x', { duration: 0.7, ease: 'power3.out' });
       var yTo = gsap.quickTo(float, 'y', { duration: 0.7, ease: 'power3.out' });
+      var shown = false;
+      var current = null;
 
-      list.addEventListener('mousemove', function (e) { xTo(e.clientX); yTo(e.clientY); });
-      list.addEventListener('mouseenter', function (e) {
-        gsap.set(float, { x: e.clientX, y: e.clientY });
-        gsap.to(float, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out' });
-      });
-      list.addEventListener('mouseleave', function () {
-        gsap.to(float, { opacity: 0, scale: 0.6, duration: 0.5, ease: 'expo.out' });
-      });
-      $all('[data-img]', list).forEach(function (item) {
+      function setItem(item) {
+        if (!item || item === current) return;
+        current = item;
         var src = item.getAttribute('data-img');
-        var preload = new Image();
-        preload.src = src;
-        item.addEventListener('mouseenter', function () {
-          if (img.getAttribute('src') !== src) img.setAttribute('src', src);
-          gsap.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 0.8, ease: 'expo.out' });
-        });
+        if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+        gsap.fromTo(img, { scale: 1.2 }, { scale: 1, duration: 0.8, ease: 'expo.out' });
+      }
+      function show(x, y) {
+        if (shown) return;
+        shown = true;
+        gsap.set(float, { x: x, y: y });
+        gsap.to(float, { opacity: 1, scale: 1, duration: 0.6, ease: 'expo.out', overwrite: 'auto' });
+      }
+      function hide() {
+        if (!shown) return;
+        shown = false;
+        current = null;
+        gsap.to(float, { opacity: 0, scale: 0.6, duration: 0.5, ease: 'expo.out', overwrite: 'auto' });
+      }
+
+      // Driven by mousemove rather than mouseenter, so the image comes back even when the
+      // browser skipped boundary events while the page scrolled.
+      list.addEventListener('mousemove', function (e) {
+        show(e.clientX, e.clientY);
+        setItem(e.target.closest('[data-img]'));
+        xTo(e.clientX);
+        yTo(e.clientY);
       });
+      list.addEventListener('mouseleave', hide);
+      $all('[data-img]', list).forEach(function (item) {
+        var preload = new Image();
+        preload.src = item.getAttribute('data-img');
+      });
+
+      // Scrolling moves the list under a still cursor without firing mouseleave,
+      // so check what is under the cursor on every scroll and hide when it is not the list.
+      window.addEventListener('scroll', function () {
+        if (!shown) return;
+        var el = pointer && document.elementFromPoint(pointer.x, pointer.y);
+        if (!el || !list.contains(el)) return hide();
+        setItem(el.closest('[data-img]'));
+      }, { passive: true });
+      window.addEventListener('blur', hide);
+      document.addEventListener('mouseout', function (e) { if (!e.relatedTarget) hide(); });
     });
   }
 
