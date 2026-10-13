@@ -43,6 +43,7 @@ assets/css/main.css     All styles (colors and type at the top)
 assets/js/main.js       All interactions and animations
 assets/vendor/          GSAP 3.15.0, ScrollTrigger, Lenis 1.3.26
 assets/img/            Logo files, favicons and the social share image
+assets/img/team/       Team photos, resized and cropped for each layout
 sitemap.xml, robots.txt Search engine files
 ```
 
@@ -101,26 +102,32 @@ Do not use Unsplash photo `1783094268362-c49d7f290c82` (woman in blue scrubs wit
 | Yerevan at dusk | [Aleksei Agafonov](https://unsplash.com/photos/faCnugnJwpE) |
 | The Cascade | [Hrag Kosbekian](https://unsplash.com/photos/al_KyWWoyUI) |
 | Cascade sculptures | [Tigran Shishmanyan](https://unsplash.com/photos/R1qepPVFzx0) |
-| Taking notes | [Aleksei Zhivilov](https://unsplash.com/photos/4CMDPkkST7I) |
 | Desk with glasses | [Irfan Syahmi](https://unsplash.com/photos/QQeIkbnwAbA) |
 | Weekly planner | [Renáta-Adrienn](https://unsplash.com/photos/ebvCsRypmxM) |
 | Wall calendar | [Nathan Dumlao](https://unsplash.com/photos/tG4waP7YiAg) |
 | Calculator | [FIN](https://unsplash.com/photos/741iShluYhk) |
 | Laptop on dark desk | [Luca Bravo](https://unsplash.com/photos/9l_326FISzk) |
-| Assistant with headphones | [Rodrigo Rodrigues](https://unsplash.com/photos/PEm8fqi4vBA) |
 | Social media phone | [Berke Citak](https://unsplash.com/photos/0cpyFsSUiSc) |
 | Medical professional | [Jonathan Borba](https://unsplash.com/photos/uBb_ZDIrquc) |
 | Scales of justice | [Nellie Adamyan](https://unsplash.com/photos/I2Ge7bLAhV4) |
 | Law library | [Nasser Eledroos](https://unsplash.com/photos/dykSg3AgqV4) |
 | Video call | [Vitaly Gariev](https://unsplash.com/photos/GD4jccM_K_E) |
 | Organized workstation | [Arnel Hasanovic](https://unsplash.com/photos/MNd-Rka1o0Q) |
-| Working from home | [Luca Nicoletti](https://unsplash.com/photos/mNJVyLyiLtw) |
 | Working by the window | [Filip Rankovic Grobgaard](https://unsplash.com/photos/mhQAQATZApA) |
 | Sunlit desk | [Minh Pham](https://unsplash.com/photos/IisDPFNUS4k) |
-| Smiling at the laptop | [Rodrigo Rodrigues](https://unsplash.com/photos/xEqFIzP0_3c) |
 | At the desk | [Vitaly Gariev](https://unsplash.com/photos/wAPhLocO-ms) |
 | Notepad | [Marissa Grootes](https://unsplash.com/photos/flRm0z3MEoA) |
 | Doctor's office | [charlesdeluvio](https://unsplash.com/photos/S5meg_j_W1U) |
+
+The team photos come from [Pexels](https://www.pexels.com/license/) and are stored in the project itself (`assets/img/team/`) as WebP files in four sizes, each cropped around the person for the spot it fills.
+
+| Use | Photo |
+| --- | --- |
+| Home statement, Reliable | [Businesswoman on a phone call](https://www.pexels.com/photo/focused-businesswoman-on-a-phone-call-34232430/) |
+| Virtual Reception service card | [Man on the phone at his desk](https://www.pexels.com/photo/man-sitting-at-the-desk-in-an-office-and-talking-on-the-phone-6803547/) |
+| Become a VA page | [Woman working in a modern office](https://www.pexels.com/photo/professional-woman-working-in-modern-office-space-35730233/) |
+| Startups and founders card, Coachable | [Woman in a blazer](https://www.pexels.com/photo/a-woman-wearing-a-blazer-7611185/) |
+| About page, Work ethic | [Woman with a laptop](https://www.pexels.com/photo/brunette-woman-sitting-with-laptop-17810857/) |
 
 ## Third party code
 
