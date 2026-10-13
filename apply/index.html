@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Become a Virtual Assistant with HyeTeam</title>
   <meta name="description" content="Work with US based businesses from home, part time or full time. Apply to become a HyeTeam Virtual Assistant.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://www.hyeteam.com/apply/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="HyeTeam">
@@ -12,6 +13,10 @@
   <meta property="og:description" content="Work with US based businesses from home, part time or full time. Apply to become a HyeTeam Virtual Assistant.">
   <meta property="og:url" content="https://www.hyeteam.com/apply/">
   <meta property="og:image" content="https://www.hyeteam.com/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HyeTeam, Virtual Assistants from Armenia">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#0a0e12">
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
@@ -21,11 +26,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:wght@400;500;600;700&amp;display=swap">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hyeteam.com/"},{"@type":"ListItem","position":2,"name":"Become a Virtual Assistant","item":"https://www.hyeteam.com/apply/"}]}</script>
   <link rel="stylesheet" href="../assets/css/main.css">
   <script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.HYE_READY){document.documentElement.classList.remove('js');}},4000);</script>
   <script defer src="../assets/vendor/gsap.min.js"></script>
   <script defer src="../assets/vendor/ScrollTrigger.min.js"></script>
   <script defer src="../assets/vendor/lenis.min.js"></script>
+  <script defer src="../assets/js/config.js"></script>
   <script defer src="../assets/js/main.js"></script>
 </head>
 <body>
@@ -69,7 +76,7 @@
     </div>
   </div>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
 
     <section class="page-hero" data-theme="dark" data-hero>
       <div class="hero__glow" aria-hidden="true"></div>
@@ -132,19 +139,20 @@
           </div>
           <p class="lead" data-reveal>Fill out an initial application below and become a part of HyeTeam.</p>
         </div>
-        <form class="form" data-form data-reveal data-endpoint="" data-mailto="info@hyeteam.com" data-subject="Virtual Assistant application" data-success="Thank you for applying. We will review your application and be in touch.">
-          <div class="field"><label for="a-name">Full name</label><input id="a-name" name="name" data-label="Name" type="text" autocomplete="name" required placeholder="Your name"></div>
-          <div class="field"><label for="a-email">Email</label><input id="a-email" name="email" data-label="Email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+        <form class="form" data-form data-reveal novalidate data-form-name="application" data-mailto="info@hyeteam.com" data-subject="New Virtual Assistant application" data-success="Thank you for applying. We will review your application and be in touch.">
+          <p class="form__note">Fields marked with an asterisk (<span class="req" aria-hidden="true">*</span>) are required.</p>
+          <div class="field"><label for="a-name">Full name<span class="req" aria-hidden="true">*</span></label><input id="a-name" name="name" data-label="Name" type="text" autocomplete="name" required placeholder="Your name"></div>
+          <div class="field"><label for="a-email">Email<span class="req" aria-hidden="true">*</span></label><input id="a-email" name="email" data-label="Email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
           <div class="field"><label for="a-phone">Phone</label><input id="a-phone" name="phone" data-label="Phone" type="tel" autocomplete="tel" placeholder="Your phone number"></div>
           <div class="field"><label for="a-city">City</label><input id="a-city" name="city" data-label="City" type="text" autocomplete="address-level2" placeholder="Yerevan, Armenia"></div>
-          <div class="field"><label for="a-english">English level</label><select id="a-english" name="english" data-label="English level" required>
+          <div class="field"><label for="a-english">English level<span class="req" aria-hidden="true">*</span></label><select id="a-english" name="english" data-label="English level" required>
             <option value="" disabled selected>Select one</option>
             <option>Native or bilingual</option>
             <option>Fluent</option>
             <option>Advanced</option>
             <option>Intermediate</option>
           </select></div>
-          <div class="field"><label for="a-availability">Availability</label><select id="a-availability" name="availability" data-label="Availability" required>
+          <div class="field"><label for="a-availability">Availability<span class="req" aria-hidden="true">*</span></label><select id="a-availability" name="availability" data-label="Availability" required>
             <option value="" disabled selected>Select one</option>
             <option>Full time</option>
             <option>Part time</option>
@@ -163,13 +171,13 @@
             </div>
           </fieldset>
           <div class="field field--full"><label for="a-link">LinkedIn or resume link</label><input id="a-link" name="link" data-label="Link" type="url" placeholder="https://"></div>
-          <div class="field field--full"><label for="a-about">Tell us about yourself</label><textarea id="a-about" name="about" data-label="About" required placeholder="Your experience, your strengths, and why you want to join HyeTeam."></textarea></div>
-          <div class="hp" aria-hidden="true"><label for="a-website">Website</label><input id="a-website" name="company_website" type="text" tabindex="-1" autocomplete="off"></div>
+          <div class="field field--full"><label for="a-about">Tell us about yourself<span class="req" aria-hidden="true">*</span></label><textarea id="a-about" name="about" data-label="About" required placeholder="Your experience, your strengths, and why you want to join HyeTeam."></textarea></div>
+          <div class="hp" aria-hidden="true"><label for="a-website">Leave this field empty</label><input id="a-website" name="_honey" type="text" tabindex="-1" autocomplete="off"></div>
           <div class="form__foot">
             <small>By applying you agree to our <a href="../terms/" data-label="Terms">Terms and Conditions</a> and <a href="../privacy/" data-label="Privacy">Privacy Policy</a>.</small>
             <button class="btn" type="submit" data-magnetic><span class="btn__label"><span>Submit application</span><span aria-hidden="true">Submit application</span></span><span class="btn__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></button>
           </div>
-          <p class="form__status" data-form-status role="status" hidden></p>
+          <p class="form__status" data-form-status role="status" aria-live="polite" tabindex="-1" hidden></p>
         </form>
       </div>
     </section>
@@ -199,11 +207,12 @@
         </div>
         <div class="footer__col">
           <h2>Social</h2>
-          <a href="https://www.instagram.com/hyeteam/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.facebook.com/hyeteam" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://www.instagram.com/hyeteam/" target="_blank" rel="noopener">Instagram<span class="sr-only"> (opens in a new tab)</span></a>
+          <a href="https://www.facebook.com/hyeteam" target="_blank" rel="noopener">Facebook<span class="sr-only"> (opens in a new tab)</span></a>
           <h2 style="margin-top: 1.25rem">Legal</h2>
           <a href="../privacy/" data-label="Privacy">Privacy Policy</a>
           <a href="../terms/" data-label="Terms">Terms and Conditions</a>
+          <a href="../accessibility/" data-label="Accessibility">Accessibility</a>
         </div>
       </div>
 
@@ -211,7 +220,7 @@
 
       <div class="footer__bottom">
         <p>&copy; <span data-year>2026</span> HyeTeam. All rights reserved.</p>
-        <p>Designed by <a href="https://www.tenelevenmedia.com" target="_blank" rel="noopener">TENELEVENMEDIA</a></p>
+        <p>Designed by <a href="https://www.tenelevenmedia.com" target="_blank" rel="noopener">TENELEVENMEDIA<span class="sr-only"> (opens in a new tab)</span></a></p>
       </div>
     </div>
     <script>document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });</script>

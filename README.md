@@ -11,6 +11,8 @@ A fast, static website with no build step. Every page is plain HTML, one shared 
 * Smooth scrolling with [Lenis](https://github.com/darkroomengineering/lenis)
 * Scroll animations, horizontal scrolling sections and page transitions with [GSAP](https://gsap.com) and ScrollTrigger
 * Respects "reduce motion" settings and works with JavaScript turned off
+* Built to WCAG 2.2 Level AA (see [Accessibility](#accessibility))
+* Search ready: titles, descriptions, structured data, sitemap (see [Search engines and analytics](#search-engines-and-analytics))
 * Responsive from small phones to large desktop screens
 
 ## Pages
@@ -26,6 +28,7 @@ A fast, static website with no build step. Every page is plain HTML, one shared 
 | Blog articles | `/blog/legal/`, `/blog/healthcare/`, `/blog/efficiency/` |
 | Privacy Policy | `/privacy/` |
 | Terms and Conditions | `/terms/` |
+| Accessibility Statement | `/accessibility/` |
 | Not found | `/404.html` |
 
 The previous site's addresses (`/about-us`, `/hire-a-virtual-assistant`, `/become-a-virtual-assistant`, `/privacy-policy`, `/terms-and-conditions`) redirect to the new pages so existing links and search results keep working.
@@ -38,8 +41,10 @@ about/ hire/ apply/     Inner pages (each has an index.html)
 contact/
 blog/                   Blog index and articles
 privacy/ terms/         Privacy Policy and Terms and Conditions
+accessibility/          Accessibility Statement
 404.html                Not found page
 assets/css/main.css     All styles (colors and type at the top)
+assets/js/config.js     Site settings: form email and Google Analytics ID
 assets/js/main.js       All interactions and animations
 assets/vendor/          GSAP 3.15.0, ScrollTrigger, Lenis 1.3.26
 assets/img/            Logo files, favicons and the social share image
@@ -77,7 +82,7 @@ The site works on any static host.
 
 **Contact details.** Email, phone and address appear in the header menu, footer, contact page and privacy policy of every page. Search the project for `info@hyeteam.com` and `972.483.0260` to update them.
 
-**Forms.** The contact form and the Virtual Assistant application work right away: on submit they open the visitor's email app with a message to `info@hyeteam.com` already written. To receive submissions directly instead, create a form endpoint (Formspree, Basin, Getform or similar) and paste its URL into the form's `data-endpoint` attribute in `contact/index.html` and `apply/index.html`.
+**Forms.** See [Contact form email](#contact-form-email). The receiving address is `formEmail` in `assets/js/config.js`.
 
 **Strategy Call link.** "Schedule a Strategy Call" buttons go to the contact form with "A free Strategy Call" preselected. To send people to a booking page such as Calendly, replace `contact/?topic=strategy#form` in those buttons with the booking link.
 
@@ -86,6 +91,100 @@ The site works on any static host.
 **Copyright year.** The footer year updates itself from the visitor's clock, so it shows 2027 starting January 1, 2027 with no edits needed.
 
 **Writing style.** The site copy intentionally uses no dashes or hyphens. Keep that in mind when adding text (for example "full time", "back office", "US based").
+
+## Contact form email
+
+The contact form and the Virtual Assistant application send every submission straight to `info@hyeteam.com` through [FormSubmit](https://formsubmit.co), a free form to email service. Nothing to install and no account needed. Visitors stay on the page and see a thank you message. Each email arrives as a neat table with the visitor's details, and pressing Reply answers the visitor directly.
+
+**One time activation (do this once the site is live):**
+
+1. Open the live Contact page and send yourself a test message.
+2. FormSubmit sends an activation email to `info@hyeteam.com` (it comes from FormSubmit and contains an **Activate Form** button). Check the spam folder if it is not in the inbox.
+3. Click **Activate Form** in that email.
+4. Send one more test message. It should arrive within a minute or two.
+
+Until the form is activated, visitors who submit see a note offering to send the same message from their own email app, so nothing is lost. If the site later moves to a different web address, FormSubmit may ask you to activate again.
+
+**To change the receiving address,** edit `formEmail` in `assets/js/config.js`. The new address needs the same one time activation.
+
+**Spam:** both forms include a hidden trap field that bots fill in and people never see, so most spam is dropped before it is sent.
+
+**Analytics:** when Google Analytics is turned on, each successful form submission is recorded as a `generate_lead` event.
+
+## Accessibility
+
+The site is built and tested to the Web Content Accessibility Guidelines (WCAG) 2.2 Level AA, the standard commonly used for the Americans with Disabilities Act (ADA). The public [Accessibility Statement](https://www.hyeteam.com/accessibility/) explains this to visitors and tells them how to ask for help.
+
+What is in place:
+
+* Every page works with a keyboard alone: skip link, visible focus ring, logical tab order, and the mobile menu keeps focus inside while it is open (Escape closes it). Cards inside the sideways scrolling sections scroll into view when they receive keyboard focus.
+* Color contrast meets AA everywhere, including text over photos and on the blue sections.
+* Every image has a text alternative, and decorative images are hidden from screen readers.
+* Animated headlines are read as one sentence by screen readers, not word by word.
+* Forms have visible labels, required fields marked with an asterisk, and clear error messages under each field that screen readers announce.
+* Scrolling text bands have a pause button (the choice is remembered), the hero badge only turns while you scroll, and all motion is off for visitors who choose reduced motion in their device settings.
+* Pages reflow at 320 pixels wide (400 percent zoom) and hold up when text spacing is increased.
+
+How it was tested: automated checks with axe and Google Lighthouse on every page (desktop and mobile, with and without animation), a keyboard pass through every page, plus checks for reflow, text spacing, color contrast over images, and screen reader names.
+
+Keep it accessible when editing:
+
+* Give every new image a short, meaningful `alt` text, or `alt=""` if it is purely decorative.
+* Keep headings in order (one `h1` per page, then `h2`, then `h3`).
+* Check contrast for any new colors at [webaim.org/resources/contrastchecker](https://webaim.org/resources/contrastchecker/).
+* Do not remove the marquee pause button or the focus styles.
+* After changes, run Lighthouse in Chrome (DevTools, Lighthouse tab) and aim for 100 in Accessibility.
+
+No automated test can promise legal compliance. For extra assurance, a manual review with a screen reader (VoiceOver on Mac or iPhone, NVDA on Windows) is a good yearly habit, and update the date on the Accessibility Statement when you do.
+
+## Search engines and analytics
+
+Already built in: a unique title and description on every page, canonical links, Open Graph and social sharing tags, structured data for Google (Organization, WebSite, Service, BlogPosting, and breadcrumbs), `sitemap.xml`, `robots.txt`, descriptive image text, fast loading images, and redirects from the old site's addresses. Every public page scores 100 for SEO, Accessibility, and Best Practices in Google Lighthouse (the 404 page is intentionally hidden from search).
+
+### 1. Put the site on www.hyeteam.com
+
+1. In GitHub, open the repository, then **Settings**, then **Pages**. Under **Build and deployment**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`, and save.
+2. In the same screen, enter `www.hyeteam.com` under **Custom domain** and save.
+3. At your domain registrar (where hyeteam.com is managed), set these DNS records:
+   * `CNAME` record: host `www`, value `henrymosk1011.github.io`
+   * `A` records for the bare domain (host `@`): `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+4. Wait for DNS to update (minutes to a few hours), then tick **Enforce HTTPS** on the GitHub Pages screen.
+
+### 2. Google Search Console (how Google finds and ranks the site)
+
+1. Go to [search.google.com/search-console](https://search.google.com/search-console) and sign in with the Google account that should own the site.
+2. Click **Add property** and choose **Domain**. Enter `hyeteam.com`.
+3. Google shows a `TXT` record. Add it at your domain registrar as a new DNS record (host `@`), then click **Verify**. It can take a little while for DNS to update; try Verify again if needed.
+4. In the left menu, open **Sitemaps**, enter `https://www.hyeteam.com/sitemap.xml`, and click **Submit**.
+5. Open **URL inspection**, enter `https://www.hyeteam.com/`, and click **Request indexing**. Repeat for the Hire and About pages.
+6. Check back in a few days: **Pages** shows what is indexed, and **Performance** shows searches, clicks, and ranking positions.
+
+### 3. Google Analytics 4 (visitor numbers)
+
+1. Go to [analytics.google.com](https://analytics.google.com) and click **Start measuring** (or **Admin**, then **Create**, then **Property**).
+2. Name the property `HyeTeam`, pick your time zone and currency, and continue through the business questions.
+3. Choose **Web** as the platform, enter `https://www.hyeteam.com`, name the stream `HyeTeam website`, and create it.
+4. Copy the **Measurement ID**. It looks like `G-AB12CD34EF`.
+5. In GitHub, open `assets/js/config.js`, click the pencil icon to edit, and paste the ID between the quotes: `gaMeasurementId: 'G-AB12CD34EF'`. Commit the change to `main`.
+6. Visit the live site, then check **Reports**, then **Realtime** in Analytics. Your visit should appear within a minute.
+7. After the first form submission, open **Admin**, then **Events**, and mark `generate_lead` as a **key event** so contact requests show up as conversions.
+8. Optional: in **Admin**, then **Product links**, then **Search Console links**, link the Search Console property to see search data inside Analytics.
+
+If you plan to market to visitors in the European Union or the United Kingdom, add a cookie consent banner before turning Analytics on.
+
+### 4. Bing and other search engines
+
+Go to [bing.com/webmasters](https://www.bing.com/webmasters), sign in, and choose **Import from Google Search Console**. Yahoo and DuckDuckGo draw on Bing's results, so this covers them too.
+
+### 5. Google Business Profile (optional)
+
+A free profile at [business.google.com](https://business.google.com) can show HyeTeam on Google Maps and in local results. Google only allows an address that is staffed during business hours; if the Dallas address is a mailbox, set the profile up as a service area business and hide the address.
+
+### 6. Health checks
+
+* [PageSpeed Insights](https://pagespeed.web.dev): speed and Core Web Vitals for the live site.
+* [Rich Results Test](https://search.google.com/test/rich-results): confirms Google can read the structured data.
+* When you add a blog post or page, add it to `sitemap.xml` so Google finds it quickly.
 
 ## Images
 

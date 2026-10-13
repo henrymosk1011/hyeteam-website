@@ -3,15 +3,20 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Contact HyeTeam</title>
+  <title>Contact HyeTeam. Schedule a Free Strategy Call</title>
   <meta name="description" content="Schedule a free Strategy Call or send us a message to find the right Virtual Assistant for your business.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://www.hyeteam.com/contact/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="HyeTeam">
-  <meta property="og:title" content="Contact HyeTeam">
+  <meta property="og:title" content="Contact HyeTeam. Schedule a Free Strategy Call">
   <meta property="og:description" content="Schedule a free Strategy Call or send us a message to find the right Virtual Assistant for your business.">
   <meta property="og:url" content="https://www.hyeteam.com/contact/">
   <meta property="og:image" content="https://www.hyeteam.com/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HyeTeam, Virtual Assistants from Armenia">
+  <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#0a0e12">
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
@@ -21,11 +26,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://images.unsplash.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Inter+Tight:wght@400;500;600;700&amp;display=swap">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.hyeteam.com/"},{"@type":"ListItem","position":2,"name":"Contact","item":"https://www.hyeteam.com/contact/"}]}</script>
   <link rel="stylesheet" href="../assets/css/main.css">
   <script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.HYE_READY){document.documentElement.classList.remove('js');}},4000);</script>
   <script defer src="../assets/vendor/gsap.min.js"></script>
   <script defer src="../assets/vendor/ScrollTrigger.min.js"></script>
   <script defer src="../assets/vendor/lenis.min.js"></script>
+  <script defer src="../assets/js/config.js"></script>
   <script defer src="../assets/js/main.js"></script>
 </head>
 <body>
@@ -69,7 +76,7 @@
     </div>
   </div>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
 
     <section class="page-hero" data-theme="dark" data-hero>
       <div class="hero__glow" aria-hidden="true"></div>
@@ -95,9 +102,10 @@
         </div>
         <div class="stack" style="--stack: 2rem">
           <h2 class="h2" data-split>Tell us what <em>you need.</em></h2>
-          <form class="form" data-form data-reveal data-endpoint="" data-mailto="info@hyeteam.com" data-subject="Website inquiry" data-success="Thank you. We will be in touch shortly.">
-            <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" data-label="Name" type="text" autocomplete="name" required placeholder="Your name"></div>
-            <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" data-label="Email" type="email" autocomplete="email" required placeholder="you@company.com"></div>
+          <form class="form" data-form data-reveal novalidate data-form-name="contact" data-mailto="info@hyeteam.com" data-subject="New website inquiry" data-success="Thank you. We will be in touch shortly.">
+            <p class="form__note">Fields marked with an asterisk (<span class="req" aria-hidden="true">*</span>) are required.</p>
+            <div class="field"><label for="c-name">Name<span class="req" aria-hidden="true">*</span></label><input id="c-name" name="name" data-label="Name" type="text" autocomplete="name" required placeholder="Your name"></div>
+            <div class="field"><label for="c-email">Email<span class="req" aria-hidden="true">*</span></label><input id="c-email" name="email" data-label="Email" type="email" autocomplete="email" required placeholder="you@company.com"></div>
             <div class="field"><label for="c-phone">Phone</label><input id="c-phone" name="phone" data-label="Phone" type="tel" autocomplete="tel" placeholder="Your phone number"></div>
             <div class="field"><label for="c-company">Company</label><input id="c-company" name="company" data-label="Company" type="text" autocomplete="organization" placeholder="Company name"></div>
             <div class="field field--full"><label for="c-topic">I am interested in</label><select id="c-topic" name="topic" data-label="Interested in">
@@ -106,13 +114,13 @@
               <option value="part">A part time assistant</option>
               <option value="other">Something else</option>
             </select></div>
-            <div class="field field--full"><label for="c-message">Message</label><textarea id="c-message" name="message" data-label="Message" required placeholder="Tell us about your business and the tasks you would like to hand off."></textarea></div>
-            <div class="hp" aria-hidden="true"><label for="c-website">Website</label><input id="c-website" name="company_website" type="text" tabindex="-1" autocomplete="off"></div>
+            <div class="field field--full"><label for="c-message">Message<span class="req" aria-hidden="true">*</span></label><textarea id="c-message" name="message" data-label="Message" required placeholder="Tell us about your business and the tasks you would like to hand off."></textarea></div>
+            <div class="hp" aria-hidden="true"><label for="c-website">Leave this field empty</label><input id="c-website" name="_honey" type="text" tabindex="-1" autocomplete="off"></div>
             <div class="form__foot">
               <small>We respect your privacy. Read our <a href="../privacy/" data-label="Privacy">Privacy Policy</a>.</small>
               <button class="btn" type="submit" data-magnetic><span class="btn__label"><span>Send message</span><span aria-hidden="true">Send message</span></span><span class="btn__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></span></button>
             </div>
-            <p class="form__status" data-form-status role="status" hidden></p>
+            <p class="form__status" data-form-status role="status" aria-live="polite" tabindex="-1" hidden></p>
           </form>
         </div>
       </div>
@@ -143,11 +151,12 @@
         </div>
         <div class="footer__col">
           <h2>Social</h2>
-          <a href="https://www.instagram.com/hyeteam/" target="_blank" rel="noopener">Instagram</a>
-          <a href="https://www.facebook.com/hyeteam" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://www.instagram.com/hyeteam/" target="_blank" rel="noopener">Instagram<span class="sr-only"> (opens in a new tab)</span></a>
+          <a href="https://www.facebook.com/hyeteam" target="_blank" rel="noopener">Facebook<span class="sr-only"> (opens in a new tab)</span></a>
           <h2 style="margin-top: 1.25rem">Legal</h2>
           <a href="../privacy/" data-label="Privacy">Privacy Policy</a>
           <a href="../terms/" data-label="Terms">Terms and Conditions</a>
+          <a href="../accessibility/" data-label="Accessibility">Accessibility</a>
         </div>
       </div>
 
@@ -155,7 +164,7 @@
 
       <div class="footer__bottom">
         <p>&copy; <span data-year>2026</span> HyeTeam. All rights reserved.</p>
-        <p>Designed by <a href="https://www.tenelevenmedia.com" target="_blank" rel="noopener">TENELEVENMEDIA</a></p>
+        <p>Designed by <a href="https://www.tenelevenmedia.com" target="_blank" rel="noopener">TENELEVENMEDIA<span class="sr-only"> (opens in a new tab)</span></a></p>
       </div>
     </div>
     <script>document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });</script>

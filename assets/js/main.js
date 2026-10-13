@@ -50,8 +50,18 @@
   /* ---------------------------------------------------------
      Split text into words, keeping inline markup intact
      --------------------------------------------------------- */
+  /* Visible text of an element, with line breaks read as spaces */
+  function readableText(el) {
+    var clone = el.cloneNode(true);
+    $all('br', clone).forEach(function (br) { br.replaceWith(' '); });
+    return clone.textContent.replace(/\s+/g, ' ').trim();
+  }
+
   function splitWords(el) {
     if (el.dataset.splitDone) return $all('.wi', el);
+    // Headings keep one accessible name; the animated word pieces are hidden from screen readers.
+    var isHeading = /^H[1-6]$/.test(el.tagName);
+    var label = isHeading ? readableText(el) : '';
     function wrap(node) {
       var w = document.createElement('span');
       w.className = 'w';
@@ -88,6 +98,10 @@
       });
     }
     walk(el);
+    if (isHeading) {
+      el.setAttribute('aria-label', label);
+      $all('.w', el).forEach(function (w) { w.setAttribute('aria-hidden', 'true'); });
+    }
     el.dataset.splitDone = '1';
     return $all('.wi', el);
   }
@@ -119,12 +133,14 @@
   window.addEventListener('scroll', updateHeader, { passive: true });
   window.addEventListener('resize', updateHeader);
   updateHeader();
+  if (header) header.addEventListener('focusin', function () { header.classList.remove('is-hidden'); });
 
   /* ---------------------------------------------------------
      Mobile menu
      --------------------------------------------------------- */
   var menu = document.querySelector('[data-menu]');
   var menuToggle = document.querySelector('[data-menu-toggle]');
+  var behindMenu = [document.getElementById('main'), document.querySelector('.site-footer, footer')];
 
   function setMenu(open) {
     if (!menu || !menuToggle) return;
@@ -132,6 +148,7 @@
     menu.classList.toggle('is-open', open);
     menu.setAttribute('aria-hidden', open ? 'false' : 'true');
     if ('inert' in menu) menu.inert = !open;
+    behindMenu.forEach(function (el) { if (el && 'inert' in el) el.inert = open; });
     header.classList.toggle('menu-open', open);
     header.classList.remove('is-hidden');
     menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
@@ -157,9 +174,13 @@
   }
 
   /* ---------------------------------------------------------
-     Forms: POST to an endpoint when configured, otherwise
-     open the visitor's email app with the message ready.
+     Forms: inline validation, then the message is emailed to
+     HyeTeam through FormSubmit (address set in config.js).
+     If sending fails, the visitor can send it from their own
+     email app instead.
      --------------------------------------------------------- */
+  var CONFIG = window.HYETEAM_CONFIG || {};
+
   function initForms() {
     var params = new URLSearchParams(window.location.search);
     var topic = params.get('topic');
@@ -173,59 +194,195 @@
     $all('form[data-form]').forEach(function (form) {
       var status = form.querySelector('[data-form-status]');
       var button = form.querySelector('button[type="submit"]');
+      var to = CONFIG.formEmail || form.getAttribute('data-mailto') || 'info@hyeteam.com';
+      var subject = form.getAttribute('data-subject') || 'Website inquiry';
+      var fields = $all('input, select, textarea', form).filter(function (f) {
+        return f.name && f.name !== '_honey' && f.type !== 'hidden';
+      });
 
-      function show(message) {
+      function setStatus(text, isError, link) {
         if (!status) return;
-        status.textContent = message;
+        status.textContent = text;
+        if (link) {
+          status.appendChild(document.createTextNode(' '));
+          var a = document.createElement('a');
+          a.href = link.href;
+          a.textContent = link.text;
+          status.appendChild(a);
+        }
+        status.classList.toggle('is-error', !!isError);
         status.hidden = false;
+        status.focus({ preventScroll: true });
+        status.scrollIntoView({ block: 'nearest' });
       }
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (!form.reportValidity()) return;
-
-        var data = new FormData(form);
-        if (data.get('company_website')) return; // spam trap
-
-        var endpoint = form.getAttribute('data-endpoint');
-        if (endpoint) {
-          if (button) button.disabled = true;
-          fetch(endpoint, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
-            .then(function (res) {
-              if (!res.ok) throw new Error('Request failed');
-              form.reset();
-              show(form.getAttribute('data-success') || 'Thank you. We will be in touch shortly.');
-            })
-            .catch(function () {
-              show('Something went wrong. Please email us at info@hyeteam.com.');
-            })
-            .then(function () { if (button) button.disabled = false; });
-          return;
+      function errorEl(field) {
+        var id = (field.id || field.name) + '-error';
+        var el = document.getElementById(id);
+        if (!el) {
+          el = document.createElement('p');
+          el.id = id;
+          el.className = 'field__error';
+          el.hidden = true;
+          (field.closest('.field') || field.parentNode).appendChild(el);
         }
+        return el;
+      }
 
-        var lines = [];
-        $all('[name]', form).forEach(function (field) {
-          if (field.name === 'company_website' || !field.name) return;
+      function errorText(field) {
+        var v = field.validity;
+        if (v.valueMissing) return field.tagName === 'SELECT' ? 'Please choose an option.' : 'This field is required.';
+        if (v.typeMismatch && field.type === 'email') return 'Please enter a valid email address, like name@example.com.';
+        if (v.typeMismatch && field.type === 'url') return 'Please enter a full web address that starts with https://';
+        return field.validationMessage;
+      }
+
+      function check(field) {
+        var ok = field.checkValidity();
+        var err = errorEl(field);
+        var described = (field.getAttribute('aria-describedby') || '').split(' ').filter(function (id) { return id && id !== err.id; });
+        if (ok) {
+          field.removeAttribute('aria-invalid');
+          err.hidden = true;
+          err.textContent = '';
+        } else {
+          field.setAttribute('aria-invalid', 'true');
+          err.textContent = errorText(field);
+          err.hidden = false;
+          described.push(err.id);
+        }
+        if (described.length) field.setAttribute('aria-describedby', described.join(' '));
+        else field.removeAttribute('aria-describedby');
+        return ok;
+      }
+
+      fields.forEach(function (field) {
+        var recheck = function () { if (field.getAttribute('aria-invalid') === 'true') check(field); };
+        field.addEventListener('input', recheck);
+        field.addEventListener('change', recheck);
+        field.addEventListener('blur', function () {
+          // People often paste web addresses without https://, so add it for them.
+          if (field.type === 'url' && field.value && !/^[a-z][a-z0-9+.]*:\/\//i.test(field.value.trim())) field.value = 'https://' + field.value.trim();
+          if (field.value) check(field);
+        });
+      });
+
+      /* Field values keyed by their visible names, for the email */
+      function collect() {
+        var out = {};
+        fields.forEach(function (field) {
           if ((field.type === 'checkbox' || field.type === 'radio') && !field.checked) return;
           var value = field.tagName === 'SELECT' && field.selectedIndex > -1
             ? field.options[field.selectedIndex].text
             : field.value;
           value = (value || '').trim();
-          if (!value) return;
-          var label = field.getAttribute('data-label') || field.name;
-          lines.push(label + ': ' + value);
+          if (!value || field.disabled) return;
+          var key = field.getAttribute('data-label') || field.name;
+          out[key] = out[key] ? out[key] + ', ' + value : value;
         });
-        var subject = form.getAttribute('data-subject') || 'Website inquiry';
-        var to = form.getAttribute('data-mailto') || 'info@hyeteam.com';
-        var href = 'mailto:' + to +
-          '?subject=' + encodeURIComponent(subject) +
-          '&body=' + encodeURIComponent(lines.join('\n'));
-        window.location.href = href;
-        show('Your email app should open with everything filled in. Just press send. If nothing opens, email us directly at ' + to + '.');
+        return out;
+      }
+
+      function mailtoHref(values) {
+        var lines = Object.keys(values).map(function (k) { return k + ': ' + values[k]; });
+        return 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
+      }
+
+      function done(values) {
+        form.reset();
+        fields.forEach(function (f) { f.removeAttribute('aria-invalid'); var e = document.getElementById((f.id || f.name) + '-error'); if (e) e.hidden = true; });
+        setStatus(form.getAttribute('data-success') || 'Thank you. We will be in touch shortly.');
+        if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { form_name: form.getAttribute('data-form-name') || 'form' });
+      }
+
+      function failed(values) {
+        setStatus('Sorry, your message could not be sent right now. Please try again in a moment, or', true, { href: mailtoHref(values), text: 'send it from your email app instead.' });
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (form.getAttribute('aria-busy') === 'true') return;
+
+        fields.forEach(function (f) {
+          if (f.type === 'url' && f.value && !/^[a-z][a-z0-9+.]*:\/\//i.test(f.value.trim())) f.value = 'https://' + f.value.trim();
+        });
+        var invalid = fields.filter(function (f) { return !check(f); });
+        if (invalid.length) {
+          if (status) {
+            status.textContent = invalid.length === 1 ? 'Please fix the field with an error message.' : 'Please fix the ' + invalid.length + ' fields with error messages.';
+            status.classList.add('is-error');
+            status.hidden = false;
+          }
+          invalid[0].focus();
+          return;
+        }
+
+        var values = collect();
+        var trap = form.querySelector('[name="_honey"]');
+        if (trap && trap.value) { done(values); return; } // spam bots fill the hidden field
+
+        var endpoint = form.getAttribute('data-endpoint') || (CONFIG.formEmail ? 'https://formsubmit.co/ajax/' + CONFIG.formEmail : '');
+        if (!endpoint) {
+          window.location.href = mailtoHref(values);
+          setStatus('Your email app should open with everything filled in. Just press send. If nothing opens, email us at ' + to + '.');
+          return;
+        }
+
+        var emailField = form.querySelector('[name="email"]');
+        var payload = { _subject: subject, _template: 'table', _captcha: 'false', _replyto: emailField ? emailField.value.trim() : '' };
+        Object.keys(values).forEach(function (k) { payload[k] = values[k]; });
+
+        form.setAttribute('aria-busy', 'true');
+        if (button) button.disabled = true;
+        if (status) { status.hidden = false; status.classList.remove('is-error'); status.textContent = 'Sending your message…'; }
+
+        fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            return res.json().catch(function () { return {}; }).then(function (json) {
+              if (res.ok && (json.success === true || json.success === 'true')) done(values);
+              else failed(values);
+            });
+          })
+          .catch(function () { failed(values); })
+          .then(function () {
+            form.removeAttribute('aria-busy');
+            if (button) button.disabled = false;
+          });
       });
     });
   }
   initForms();
+
+  /* ---------------------------------------------------------
+     Pause control for the scrolling text bands. The choice is
+     remembered across pages.
+     --------------------------------------------------------- */
+  var marqueeLoops = [];
+  var marqueePaused = (function () {
+    try { return window.localStorage.getItem('hye-marquee') === 'paused'; } catch (e) { return false; }
+  })();
+
+  function applyMarqueeState() {
+    $all('[data-marquee]').forEach(function (m) {
+      m.classList.toggle('is-paused', marqueePaused);
+      var b = m.querySelector('[data-marquee-toggle]');
+      if (b) b.setAttribute('aria-label', marqueePaused ? 'Play scrolling text' : 'Pause scrolling text');
+    });
+    marqueeLoops.forEach(function (loop) { if (marqueePaused) loop.pause(); else loop.resume(); });
+  }
+
+  $all('[data-marquee-toggle]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      marqueePaused = !marqueePaused;
+      try { window.localStorage.setItem('hye-marquee', marqueePaused ? 'paused' : 'playing'); } catch (e) { /* storage blocked */ }
+      applyMarqueeState();
+    });
+  });
+  applyMarqueeState();
 
   /* ---------------------------------------------------------
      No animation path (also used when the loading fallback fired)
@@ -269,6 +426,7 @@
     initMedia();
     initScrub();
     initMarquees();
+    initBadge();
     initHorizontal();
     initHoverList();
     initMagnetic();
@@ -527,8 +685,9 @@
      --------------------------------------------------------- */
   function initScrub() {
     $all('[data-scrub]').forEach(function (el) {
-      var words = splitWords(el);
-      gsap.fromTo(words, { opacity: 0.14 }, {
+      // Accent words stay fully lit; the rest start dimmed but above 3:1 contrast (large text).
+      var words = splitWords(el).filter(function (w) { return !w.closest('em'); });
+      gsap.fromTo(words, { opacity: 0.48 }, {
         opacity: 1,
         ease: 'none',
         stagger: 0.12,
@@ -549,18 +708,35 @@
       loop.totalTime(loop.duration() * 200);
       var base = reverse ? -1 : 1;
       loop.timeScale(base);
+      marqueeLoops.push(loop);
+      if (marqueePaused) loop.pause();
 
       ScrollTrigger.create({
         trigger: m,
         start: 'top bottom',
         end: 'bottom top',
         onUpdate: function (self) {
+          if (marqueePaused) return;
           var boost = Math.min(Math.abs(self.getVelocity()) / 260, 5);
           var dir = self.direction * base;
           gsap.to(loop, { timeScale: dir * (1 + boost), duration: 0.2, overwrite: true });
           gsap.to(loop, { timeScale: dir, duration: 1.2, delay: 0.2, ease: 'power2.out' });
         }
       });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     Hero badge turns with the scroll
+     --------------------------------------------------------- */
+  function initBadge() {
+    var ring = document.querySelector('.hero__badge-ring');
+    if (!ring) return;
+    gsap.to(ring, {
+      rotate: 300,
+      ease: 'none',
+      transformOrigin: '50% 50%',
+      scrollTrigger: { trigger: document.documentElement, start: 'top top', end: '+=1600', scrub: 0.8 }
     });
   }
 
@@ -573,6 +749,7 @@
     var mm = gsap.matchMedia();
 
     mm.add('(min-width: 900px)', function () {
+      var undo = [];
       $all('[data-hscroll]').forEach(function (section) {
         var pin = section.querySelector('[data-hs-pin]') || section;
         var track = section.querySelector('[data-hs-track]');
@@ -580,6 +757,10 @@
         var distance = function () { return Math.max(0, track.scrollWidth - document.documentElement.clientWidth); };
         var items = $all('[data-hs-item]', track);
         var count = section.querySelector('[data-hs-current]');
+
+        // While pinned the row moves with the page, so it is not a separate scroll area.
+        var trackTab = track.getAttribute('tabindex');
+        track.removeAttribute('tabindex');
 
         var tween = gsap.to(track, {
           x: function () { return -distance(); },
@@ -614,6 +795,27 @@
           });
         });
 
+        // Keyboard focus on a card that is off to the side: scroll the page to where it is in view.
+        var onFocus = function (e) {
+          var item = e.target.closest('[data-hs-item]');
+          var st = tween.scrollTrigger;
+          if (!item || !st) return;
+          pin.scrollLeft = 0;
+          section.scrollLeft = 0;
+          var max = distance();
+          if (!max) return;
+          var itemLeft = item.getBoundingClientRect().left - track.getBoundingClientRect().left;
+          var x = Math.min(max, Math.max(0, itemLeft - (window.innerWidth - item.offsetWidth) / 2));
+          var y = st.start + (x / max) * (st.end - st.start);
+          if (lenis) lenis.scrollTo(y, { immediate: true });
+          else window.scrollTo(0, y);
+        };
+        track.addEventListener('focusin', onFocus);
+        undo.push(function () {
+          track.removeEventListener('focusin', onFocus);
+          if (trackTab !== null) track.setAttribute('tabindex', trackTab);
+        });
+
         items.forEach(function (item) {
           gsap.from(item, {
             rotate: 2.5,
@@ -634,6 +836,9 @@
         var track = rail.querySelector('[data-rail-track]');
         if (!track) return;
         var distance = function () { return Math.max(0, track.scrollWidth - rail.clientWidth); };
+        var railTab = track.getAttribute('tabindex');
+        track.removeAttribute('tabindex');
+        undo.push(function () { if (railTab !== null) track.setAttribute('tabindex', railTab); });
         gsap.fromTo(track, { x: 0 }, {
           x: function () { return -distance(); },
           ease: 'none',
@@ -646,6 +851,8 @@
           }
         });
       });
+
+      return function () { undo.forEach(function (fn) { fn(); }); };
     });
   }
 
@@ -736,6 +943,7 @@
       }, { passive: true });
       window.addEventListener('blur', hide);
       document.addEventListener('mouseout', function (e) { if (!e.relatedTarget) hide(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
     });
   }
 
