@@ -1,6 +1,6 @@
 # HyeTeam
 
-Website for **HyeTeam**, a virtual assistant staffing agency that connects businesses around the world with highly skilled Virtual Assistants from Armenia.
+Website for **HyeTeam**, a virtual assistant staffing agency that connects businesses across the United States with highly skilled Virtual Assistants from Armenia.
 
 Designed by [TENELEVENMEDIA](https://www.tenelevenmedia.com).
 
@@ -77,7 +77,8 @@ The site works on any static host.
 * `--brand` `#02adff` (HyeTeam blue: buttons, accents and the blue sections)
 * `--brand-soft` `#89cff0` (logo blue)
 * `--brand-deep` `#0088cf` and `--brand-ink` `#0070ad` (the same blue, deepened so accent text stays readable on light backgrounds)
-* `--ink` `#0a0e12` (near black) and `--paper` `#f2f6f9` (cool off white)
+* `--night` `#102a43` (deep navy: the dark sections, header, menu and footer), with `--night-2` `#173755` for cards and `--night-3` `#1b3c5a` for image placeholders and hovers on those sections
+* `--ink` `#0a0e12` (near black, used for text) and `--paper` `#f2f6f9` (cool off white)
 * Fonts: Inter Tight and Instrument Serif from Google Fonts (the logo itself is a vector, so it needs no font)
 
 **Contact details.** Email, phone and address appear in the header menu, footer, contact page and privacy policy of every page. Search the project for `info@hyeteam.com` and `972.483.0260` to update them.
