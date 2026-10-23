@@ -1319,11 +1319,20 @@ body::after {
 .footer__col a:hover { color: var(--accent); }
 .footer__col address { font-style: normal; color: var(--muted); line-height: 1.6; }
 
+/* Same size as the header logo */
 .footer__logo {
-  margin-top: clamp(3.5rem, 8vw, 7rem);
+  display: flex;
+  width: max-content;
+  margin-top: 2.5rem;
   color: var(--brand-soft);
 }
-.footer__logo svg { display: block; width: 100%; height: auto; fill: currentColor; }
+.footer__logo svg {
+  display: block;
+  height: clamp(1.9rem, 2.4vw, 2.3rem);
+  width: auto;
+  aspect-ratio: 1225 / 293;
+  fill: currentColor;
+}
 
 .footer__bottom {
   display: flex;
@@ -1332,7 +1341,7 @@ body::after {
   justify-content: space-between;
   gap: .75rem 2rem;
   padding-block: 1.75rem 2rem;
-  margin-top: clamp(1rem, 2vw, 1.75rem);
+  margin-top: clamp(3.5rem, 7vw, 6rem);
   font-size: .85rem;
   color: var(--muted);
 }
