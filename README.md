@@ -63,10 +63,13 @@ npx serve .
 
 ## Deploy
 
-The site works on any static host.
+The site is hosted on **Cloudflare Pages** (project `hyeteam`), connected to this repository.
 
-* **GitHub Pages:** Settings, then Pages, then deploy from the `main` branch and the root folder. Add `www.hyeteam.com` as the custom domain.
-* **Netlify or Vercel:** import the repository. No build command is needed and the publish folder is the project root.
+* Every push to `main` goes live on www.hyeteam.com within about a minute. No build command is needed; the project root is published as is.
+* Every other branch gets its own preview address, for example `https://my-branch.hyeteam.pages.dev`, so changes can be checked before they are merged.
+* Deploys, logs and rollbacks are in the Cloudflare dashboard under **Workers & Pages**, then **hyeteam**.
+
+The site works on any static host, so it can move later without code changes.
 
 ## Common edits
 
@@ -144,18 +147,20 @@ Already built in: a unique title and description on every page, canonical links,
 
 ### 1. Put the site on www.hyeteam.com
 
-1. In GitHub, open the repository, then **Settings**, then **Pages**. Under **Build and deployment**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`, and save.
-2. In the same screen, enter `www.hyeteam.com` under **Custom domain** and save.
-3. At your domain registrar (where hyeteam.com is managed), set these DNS records:
-   * `CNAME` record: host `www`, value `henrymosk1011.github.io`
-   * `A` records for the bare domain (host `@`): `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-4. Wait for DNS to update (minutes to a few hours), then tick **Enforce HTTPS** on the GitHub Pages screen.
+The domain is registered at GoDaddy and its DNS is managed in Cloudflare (zone `hyeteam.com`).
+
+1. At GoDaddy, the domain's nameservers are set to `kira.ns.cloudflare.com` and `viddy.ns.cloudflare.com`.
+2. In Cloudflare, `hyeteam.com` and `www` are proxied `CNAME` records pointing to `hyeteam.pages.dev`, and both are added as custom domains on the Pages project.
+3. A redirect rule sends `hyeteam.com` to `https://www.hyeteam.com` (301, keeping the path and query), so there is one address for search engines.
+4. SSL is set to Full (strict) with Always Use HTTPS and TLS 1.2 or newer.
+
+Email runs on Microsoft 365 (bought through GoDaddy). Its records (`MX`, the SPF `TXT`, `autodiscover`, `msoid`, `lyncdiscover`, `sip`, `email` and the two `SRV` records) were copied from GoDaddy into Cloudflare. They must stay **DNS only** (grey cloud): proxying them breaks Outlook setup and Teams.
 
 ### 2. Google Search Console (how Google finds and ranks the site)
 
 1. Go to [search.google.com/search-console](https://search.google.com/search-console) and sign in with the Google account that should own the site.
 2. Click **Add property** and choose **Domain**. Enter `hyeteam.com`.
-3. Google shows a `TXT` record. Add it at your domain registrar as a new DNS record (host `@`), then click **Verify**. It can take a little while for DNS to update; try Verify again if needed.
+3. Google shows a `TXT` record. Add it in Cloudflare (**DNS**, then **Records**, then **Add record**, type `TXT`, name `@`), then click **Verify**. It can take a little while for DNS to update; try Verify again if needed.
 4. In the left menu, open **Sitemaps**, enter `https://www.hyeteam.com/sitemap.xml`, and click **Submit**.
 5. Open **URL inspection**, enter `https://www.hyeteam.com/`, and click **Request indexing**. Repeat for the Hire and About pages.
 6. Check back in a few days: **Pages** shows what is indexed, and **Performance** shows searches, clicks, and ranking positions.
