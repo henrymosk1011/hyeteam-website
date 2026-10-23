@@ -65,7 +65,7 @@ npx serve .
 
 The site is hosted on **Cloudflare Pages** (project `hyeteam`), connected to this repository.
 
-* Every push to `main` goes live on www.hyeteam.com within about a minute. No build command is needed; the project root is published as is.
+* Every push to `main` goes live on www.hyeteam.com within about a minute (see [Put the site on www.hyeteam.com](#1-put-the-site-on-wwwhyeteamcom) for how the domain reaches it). No build command is needed; the project root is published as is.
 * Every other branch gets its own preview address, for example `https://my-branch.hyeteam.pages.dev`, so changes can be checked before they are merged.
 * Deploys, logs and rollbacks are in the Cloudflare dashboard under **Workers & Pages**, then **hyeteam**.
 
@@ -150,9 +150,11 @@ Already built in: a unique title and description on every page, canonical links,
 The domain is registered at GoDaddy and its DNS is managed in Cloudflare (zone `hyeteam.com`).
 
 1. At GoDaddy, the domain's nameservers are set to `kira.ns.cloudflare.com` and `viddy.ns.cloudflare.com`.
-2. In Cloudflare, `hyeteam.com` and `www` are proxied `CNAME` records pointing to `hyeteam.pages.dev`, and both are added as custom domains on the Pages project.
-3. A redirect rule sends `hyeteam.com` to `https://www.hyeteam.com` (301, keeping the path and query), so there is one address for search engines. It skips paths under `/.well-known/` so Cloudflare can still verify `hyeteam.com` and renew its certificate; keep that exception if the rule is edited.
+2. A small Worker, `hyeteam-bridge`, runs on the route `www.hyeteam.com/*` and serves every request from the Pages site at `hyeteam.pages.dev`. The `hyeteam.com` and `www` DNS records are proxied placeholders (`AAAA 100::`) so that traffic stays in this zone and reaches the Worker.
+3. A redirect rule sends `hyeteam.com` to `https://www.hyeteam.com` (301, keeping the path and query), so there is one address for search engines.
 4. SSL is set to Full (strict) with Always Use HTTPS and TLS 1.2 or newer.
+
+**Why a Worker and not Pages custom domains:** the old site was on Webflow, which also runs on Cloudflare, and the Webflow site still lists `hyeteam.com` and `www.hyeteam.com` as its custom domains. While it does, Webflow keeps taking the hostname back from a Pages custom domain (Pages shows the domains as "deactivated" and visitors see the old site). Do not point `www` back at `hyeteam.pages.dev` while Webflow still lists the domain. Once the domain is removed from the Webflow site (Site settings, then Publishing, then remove both custom domains), the Worker can be swapped for regular Pages custom domains if wanted. The Worker counts toward the Workers free plan limit of 100,000 requests a day, which is far above this site's traffic.
 
 Email runs on Microsoft 365 (bought through GoDaddy). Its records (`MX`, the SPF `TXT`, `autodiscover`, `msoid`, `lyncdiscover`, `sip`, `email` and the two `SRV` records) were copied from GoDaddy into Cloudflare. They must stay **DNS only** (grey cloud): proxying them breaks Outlook setup and Teams.
 
