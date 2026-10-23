@@ -151,7 +151,7 @@ The domain is registered at GoDaddy and its DNS is managed in Cloudflare (zone `
 
 1. At GoDaddy, the domain's nameservers are set to `kira.ns.cloudflare.com` and `viddy.ns.cloudflare.com`.
 2. In Cloudflare, `hyeteam.com` and `www` are proxied `CNAME` records pointing to `hyeteam.pages.dev`, and both are added as custom domains on the Pages project.
-3. A redirect rule sends `hyeteam.com` to `https://www.hyeteam.com` (301, keeping the path and query), so there is one address for search engines.
+3. A redirect rule sends `hyeteam.com` to `https://www.hyeteam.com` (301, keeping the path and query), so there is one address for search engines. It skips paths under `/.well-known/` so Cloudflare can still verify `hyeteam.com` and renew its certificate; keep that exception if the rule is edited.
 4. SSL is set to Full (strict) with Always Use HTTPS and TLS 1.2 or newer.
 
 Email runs on Microsoft 365 (bought through GoDaddy). Its records (`MX`, the SPF `TXT`, `autodiscover`, `msoid`, `lyncdiscover`, `sip`, `email` and the two `SRV` records) were copied from GoDaddy into Cloudflare. They must stay **DNS only** (grey cloud): proxying them breaks Outlook setup and Teams.
